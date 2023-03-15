@@ -1,0 +1,9 @@
+[package]
+name = "rstest"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+futures = "0.3.27"
+leptos = "0.2.3"
+# mysql = "23.0.1"
