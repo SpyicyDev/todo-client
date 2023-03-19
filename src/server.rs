@@ -1,6 +1,4 @@
 use serde::{Deserialize, Serialize};
-use anyhow::Result;
-use web_sys::console::log_1;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq, Clone)]
 pub struct TodoItem {
@@ -8,7 +6,7 @@ pub struct TodoItem {
     pub todo_text: String
 }
 
-pub async fn get_all_todos(a: i32) -> Vec<TodoItem> {
+pub async fn get_all_todos(_a: i32) -> Vec<TodoItem> {
     let res = reqwasm::http::Request::get("https://todo-api.mackhaymond.co/get-todos")
         .send()
         .await

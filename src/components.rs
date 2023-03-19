@@ -1,5 +1,5 @@
 use leptos::*;
-use crate::server::{add_todo, delete_todo, get_all_todos, get_count, inc_count};
+use crate::server::{add_todo, delete_todo, get_all_todos, get_count, inc_count, TodoItem};
 use wasm_bindgen::prelude::*;
 use js_sys::Promise;
 use leptos::ev::SubmitEvent;
@@ -21,7 +21,7 @@ pub async fn timer(ms: i32) -> Result<(), JsValue> {
 pub fn TodoList(cx: Scope) -> impl IntoView {
     let todo_updater = create_rw_signal(cx, 0);
 
-    let todos = create_local_resource(cx, todo_updater, get_all_todos);
+    let todos: Resource<i32, Vec<TodoItem>> = create_local_resource(cx, todo_updater, get_all_todos);
 
     wasm_bindgen_futures::spawn_local(async move {
         loop {
@@ -55,14 +55,22 @@ pub fn TodoItem(cx: Scope, id: i32, text: String, todo_updater: RwSignal<i32>) -
     let delete_func = create_action(cx, |&input| delete_todo(input));
     let delete = move |_| {
         delete_func.dispatch(deleter.get());
-        delete_func.pending()
         todo_updater.update(|todo_updater| *todo_updater += 1);
+    };
+
+    let loading_view = move || {
+        view! {cx,
+            <div class="loader"></div>
+        }
     };
 
     view! {cx,
         <div class="todo-item">
             <p>{text}</p>
-            <button class="my-buttons" on:click=delete>"X"</button>
+            <div class="delete-container">
+                {move || delete_func.pending().get().then(loading_view)}
+                <button class="my-buttons" on:click=delete>"X"</button>
+            </div>
         </div>
     }
 }
@@ -110,10 +118,19 @@ pub fn InputTodo(cx: Scope, todo_updater: RwSignal<i32>) -> impl IntoView {
         todo_updater.update(|todo_updater| *todo_updater += 1);
     };
 
+    let loading_view = move || {
+        view! {cx,
+            <div class="loader-add"></div>
+        }
+    };
+
     view! {cx,
-        <form on:submit=add>
-            <input id="text" type="text" class="input-box" name="todo-input" placeholder="Write a new to-do here" node_ref=elem/>
-            <input id="btn" type="submit" style="display: none"/>
-        </form>
+        <div class="input-container">
+            <form on:submit=add>
+                <input id="text" type="text" class="input-box" name="todo-input" placeholder="Write a new to-do here" node_ref=elem/>
+                <input id="btn" type="submit" style="display: none"/>
+            </form>
+            { move || add_func.pending().get().then(loading_view)}
+        </div>
     }
 }
