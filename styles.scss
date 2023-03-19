@@ -1,0 +1,52 @@
+@mixin center-children {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+h1 {
+  text-align: center;
+  font-family: Courier, monospace;
+}
+
+p {
+  text-align: center;
+  font-family: Courier, monospace;
+}
+
+.todo-item {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+
+  margin-bottom: 10px;
+  padding: 10px;
+  background-color: #cabebe;
+  border-radius: 5px;
+  box-shadow: 1px 1px 5px rgba(0,0,0,0.2);
+
+  width: 50%;
+}
+
+.todo-container {
+  margin-top: 10px;
+  flex-direction: column;
+  @include center-children
+}
+
+.input-box {
+  font-family: Courier, monospace;
+  display: block;
+  margin: 0 auto;
+  padding: 10px;
+  width: 80%;
+  max-width: 400px;
+  border: 1px solid #000000;
+  border-radius: 5px;
+}
+
+.my-buttons {
+  padding: 8px 16px;
+  margin: 10px;
+  border-radius: 3px;
+}
