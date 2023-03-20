@@ -9,4 +9,4 @@ rustup default nightly
 rustup target add wasm32-unknown-unknown
 
 $HOME/.cargo/bin/cargo install --locked trunk
-$HOME/.cargo/bin/trunk build
+$HOME/.cargo/bin/trunk build --release
